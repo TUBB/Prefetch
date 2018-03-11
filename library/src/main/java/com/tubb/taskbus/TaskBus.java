@@ -26,6 +26,10 @@ public final class TaskBus {
 
     public synchronized <Data> long executeTask(final AdvanceTask<Data> task) {
         checkNotNull(task);
+        if (mTaskMap.containsKey(task.getTaskId())) {
+            throw new RuntimeException("A task can only execute once, you should completed the task first!");
+        }
+        task.reset();
         long taskId = System.nanoTime();
         task.setTaskId(taskId);
         mTaskMap.put(taskId, task);
@@ -33,12 +37,12 @@ public final class TaskBus {
         return taskId;
     }
 
-    public synchronized void completedTask(long taskId) {
+    public synchronized void completedTask(final long taskId) {
         mTaskMap.remove(taskId);
         mListenerMap.remove(taskId);
     }
 
-    public synchronized void registerListener(long taskId, AdvanceTask.Listener listener) {
+    public synchronized void registerListener(final long taskId, final AdvanceTask.Listener listener) {
         checkNotNull(listener);
         if (!mTaskMap.containsKey(taskId)) {
             throw new RuntimeException(String.format("The %s task not execute yet!", taskId));
@@ -47,7 +51,7 @@ public final class TaskBus {
         notifyListener(taskId);
     }
 
-    public synchronized void unregisterListener(long taskId) {
+    public synchronized void unregisterListener(final long taskId) {
         mListenerMap.remove(taskId);
     }
 

@@ -61,6 +61,13 @@ public abstract class AdvanceTask<Data> {
         return taskId;
     }
 
+    void reset() {
+        setTaskId(0L);
+        setState(INITIALIZED_STATE);
+        setData(null);
+        setException(null);
+    }
+
     public interface Listener<Data> {
         void onExecuting();
         void onSuccess(@Nullable Data data);

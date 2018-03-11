@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // pre loading user info data
+        // prefetch user info data
         taskId = TaskBus.instance().executeTask(new UserInfoAdvanceTask());
     }
 
