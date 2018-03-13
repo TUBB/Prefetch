@@ -15,7 +15,7 @@ implementation 'com.tubb.taskbus:taskbus:0.0.3'
 ```
 
 # Usage
-- Extends the [AdvanceTask]() class, define the fetch data task.
+- Extends the [AdvanceTask](https://github.com/TUBB/TaskBus/blob/master/library/src/main/java/com/tubb/taskbus/AdvanceTask.java) class, define the fetch data task.
 ```java
 public class UserInfoAdvanceTask extends AdvanceTask<UserInfo> {
     @Override
@@ -33,7 +33,7 @@ public class UserInfoAdvanceTask extends AdvanceTask<UserInfo> {
     }
 }
 ```
-- Execute the task prefetch the data and get the `taskId` you will need.
+- Execute the task prefetch the data and return the `taskId` you will need.
 ```java
 public class MainActivity extends AppCompatActivity {
     private long taskId;
