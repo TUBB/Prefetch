@@ -29,7 +29,6 @@ public final class TaskBus {
         if (mTaskMap.containsKey(task.getTaskId())) {
             throw new RuntimeException("A task can only execute once, you should completed the task first!");
         }
-        task.reset();
         long taskId = System.nanoTime();
         task.setTaskId(taskId);
         mTaskMap.put(taskId, task);
@@ -38,7 +37,11 @@ public final class TaskBus {
     }
 
     public synchronized void completedTask(final long taskId) {
-        mTaskMap.remove(taskId);
+        if (!mTaskMap.containsKey(taskId)) {
+            throw new RuntimeException(String.format("Not find the target task of %s", taskId));
+        }
+        AdvanceTask task = mTaskMap.remove(taskId);
+        task.reset();
         mListenerMap.remove(taskId);
     }
 
@@ -55,7 +58,7 @@ public final class TaskBus {
         mListenerMap.remove(taskId);
     }
 
-    private void notifyListener(long taskId) {
+    private void notifyListener(final long taskId) {
         AdvanceTask.Listener listener = mListenerMap.get(taskId);
         if (isNull(listener)) {
             Log.d(TAG, String.format("Not found %s task listener!", taskId));

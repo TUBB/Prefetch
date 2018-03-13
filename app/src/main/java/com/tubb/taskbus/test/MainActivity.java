@@ -8,7 +8,6 @@ import android.view.View;
 import com.tubb.taskbus.TaskBus;
 
 public class MainActivity extends AppCompatActivity {
-
     private long taskId;
 
     @Override

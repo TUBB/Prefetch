@@ -16,6 +16,7 @@ public class UserInfoAdvanceTask extends AdvanceTask<UserInfo> {
         return Observable.create(new ObservableOnSubscribe<UserInfo>() {
             @Override
             public void subscribe(ObservableEmitter<UserInfo> emitter) throws Exception {
+                // just for test
                 Thread.sleep(5000);
                 UserInfo userInfo = new UserInfo();
                 userInfo.name = "BingBing";

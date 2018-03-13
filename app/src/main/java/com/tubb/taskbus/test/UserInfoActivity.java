@@ -40,7 +40,7 @@ public class UserInfoActivity extends AppCompatActivity implements AdvanceTask.L
 
     @Override
     public void onExecuting() {
-        tv_user_name.setText(taskId + " task executing");
+        tv_user_name.setText(String.format("%s task executing", taskId));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UserInfoActivity extends AppCompatActivity implements AdvanceTask.L
 
     @Override
     public void onError(Throwable throwable) {
-        tv_user_name.setText(taskId + " task error");
+        tv_user_name.setText(String.format("%s task error", taskId));
         Log.e(TAG, taskId + " task", throwable);
         TaskBus.instance().completedTask(taskId);
     }
