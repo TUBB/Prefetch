@@ -1,5 +1,5 @@
 # TaskBus
-![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v0.0.3-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v0.0.4-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 Task bus for App，use for prefetch data.
 - Simple, lightweight and low intrusiveness.
@@ -11,7 +11,7 @@ Task bus for App，use for prefetch data.
 
 # Download
 ```groovy
-implementation 'com.tubb.taskbus:taskbus:0.0.3'
+implementation 'com.tubb.taskbus:taskbus:0.0.4'
 ```
 
 # Usage
@@ -93,21 +93,21 @@ public class UserInfoActivity extends AppCompatActivity implements AdvanceTask.L
     @Override
     public void onSuccess(UserInfo userInfo) {
         tv_user_name.setText(userInfo.name);
-        TaskBus.instance().completedTask(taskId);
+        TaskBus.instance().finishTask(taskId);
     }
 
     @Override
     public void onError(Throwable throwable) {
         tv_user_name.setText(String.format("%s task error", taskId));
         Log.e(TAG, taskId + " task", throwable);
-        TaskBus.instance().completedTask(taskId);
+        TaskBus.instance().finishTask(taskId);
     }
 }
 ```
 # Note
-- A task can only execute once. If you want reuse the task, you should completed the task first!
+- A task can only execute once. If you want reuse the task, you should finish the task first!
 ```java
-TaskBus.instance().completedTask(taskId);
+TaskBus.instance().finishTask(taskId);
 ```
 - Unregister the task listener right, otherwise will leak the `Activity` or other holder instance.
 ```java

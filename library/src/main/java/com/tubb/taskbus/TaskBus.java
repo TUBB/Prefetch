@@ -27,7 +27,7 @@ public final class TaskBus {
     public synchronized <Data> long executeTask(final AdvanceTask<Data> task) {
         checkNotNull(task);
         if (mTaskMap.containsKey(task.getTaskId())) {
-            throw new RuntimeException("A task can only execute once, you should completed the task first!");
+            throw new RuntimeException("A task can only execute once, you should finish the task first!");
         }
         long taskId = System.nanoTime();
         task.setTaskId(taskId);
@@ -36,7 +36,7 @@ public final class TaskBus {
         return taskId;
     }
 
-    public synchronized void completedTask(final long taskId) {
+    public synchronized void finishTask(final long taskId) {
         if (!mTaskMap.containsKey(taskId)) {
             throw new RuntimeException(String.format("Not find the target task of %s", taskId));
         }

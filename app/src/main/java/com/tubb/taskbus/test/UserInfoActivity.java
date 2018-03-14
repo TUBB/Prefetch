@@ -46,13 +46,13 @@ public class UserInfoActivity extends AppCompatActivity implements AdvanceTask.L
     @Override
     public void onSuccess(UserInfo userInfo) {
         tv_user_name.setText(userInfo.name);
-        TaskBus.instance().completedTask(taskId);
+        TaskBus.instance().finishTask(taskId);
     }
 
     @Override
     public void onError(Throwable throwable) {
         tv_user_name.setText(String.format("%s task error", taskId));
         Log.e(TAG, taskId + " task", throwable);
-        TaskBus.instance().completedTask(taskId);
+        TaskBus.instance().finishTask(taskId);
     }
 }
