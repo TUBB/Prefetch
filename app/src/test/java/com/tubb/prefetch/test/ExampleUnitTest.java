@@ -1,4 +1,4 @@
-package com.tubb.taskbus.test;
+package com.tubb.prefetch.test;
 
 import org.junit.Test;
 

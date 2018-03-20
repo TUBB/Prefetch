@@ -1,23 +1,23 @@
-# TaskBus
-![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v0.0.4-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+# Prefetch
+![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v0.0.5-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-Task bus for App，use for prefetch data.
-- Simple, lightweight and low intrusiveness.
-- Reuse the `Data Layer` before.
+Prefetch data universal library.
+- Simple, light-weight and low intrusiveness.
+- Reuse existing `Data Layer`.
 - Support RxJava. 
 
 # Preview
-![Preview](https://github.com/TUBB/TaskBus/blob/master/art/preview.gif)
+![Preview](https://github.com/TUBB/Prefetch/blob/master/art/preview.gif)
 
 # Download
 ```groovy
-implementation 'com.tubb.taskbus:taskbus:0.0.4'
+implementation 'com.tubb:prefetch:0.0.5'
 ```
 
 # Usage
-- Extends the [AdvanceTask](https://github.com/TUBB/TaskBus/blob/master/library/src/main/java/com/tubb/taskbus/AdvanceTask.java) class, define the fetch data task.
+- Extends the [FetchTask](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/FetchTask.java) class, define the fetch task.
 ```java
-public class UserInfoAdvanceTask extends AdvanceTask<UserInfo> {
+public class UserInfoFetchTask extends FetchTask<UserInfo> {
     @Override
     public Observable<UserInfo> execute() {
         return Observable.create(new ObservableOnSubscribe<UserInfo>() {
@@ -33,7 +33,7 @@ public class UserInfoAdvanceTask extends AdvanceTask<UserInfo> {
     }
 }
 ```
-- Execute the task prefetch the data and return the `taskId` you will need.
+- Execute the fetch task, prefetch the data and return the `taskId` you will need.
 ```java
 public class MainActivity extends AppCompatActivity {
     private long taskId;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // prefetch user info data
-        taskId = TaskBus.instance().executeTask(new UserInfoAdvanceTask());
+        taskId = Prefetch.instance().executeTask(new UserInfoFetchTask());
     }
 
     public void viewClick(View view) {
@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
 ```
 - Register the listener to get the loaded data.
 ```java
-public class UserInfoActivity extends AppCompatActivity implements AdvanceTask.Listener<UserInfo> {
-    private static final String TAG = "TaskBus";
+public class UserInfoActivity extends AppCompatActivity implements FetchTask.Listener<UserInfo> {
+    private static final String TAG = "Prefetch";
     private long taskId;
     private TextView tv_user_name;
 
@@ -76,13 +76,13 @@ public class UserInfoActivity extends AppCompatActivity implements AdvanceTask.L
     @Override
     protected void onResume() {
         super.onResume();
-        TaskBus.instance().registerListener(taskId, this);
+        Prefetch.instance().registerListener(taskId, this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        TaskBus.instance().unregisterListener(taskId);
+        Prefetch.instance().unregisterListener(taskId);
     }
 
     @Override
@@ -93,25 +93,25 @@ public class UserInfoActivity extends AppCompatActivity implements AdvanceTask.L
     @Override
     public void onSuccess(UserInfo userInfo) {
         tv_user_name.setText(userInfo.name);
-        TaskBus.instance().finishTask(taskId);
+        Prefetch.instance().finishTask(taskId);
     }
 
     @Override
     public void onError(Throwable throwable) {
         tv_user_name.setText(String.format("%s task error", taskId));
         Log.e(TAG, taskId + " task", throwable);
-        TaskBus.instance().finishTask(taskId);
+        Prefetch.instance().finishTask(taskId);
     }
 }
 ```
 # Note
-- A task can only execute once. If you want reuse the task, you should finish the task first!
+- A task can only execute once. If you want reuse the fetch task, you should finish the fetch task first!
 ```java
-TaskBus.instance().finishTask(taskId);
+Prefetch.instance().finishTask(taskId);
 ```
 - Unregister the task listener right, otherwise will leak the `Activity` or other holder instance.
 ```java
-TaskBus.instance().unregisterListener(taskId);
+Prefetch.instance().unregisterListener(taskId);
 ```
 
 # License

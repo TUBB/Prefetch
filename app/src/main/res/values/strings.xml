@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">TaskBus</string>
+    <string name="app_name">Prefetch</string>
+    <string name="home_label">HomePage</string>
+    <string name="user_info_label">UserInfoPage</string>
 </resources>

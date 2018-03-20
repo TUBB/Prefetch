@@ -1,4 +1,4 @@
-package com.tubb.taskbus;
+package com.tubb.prefetch;
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;

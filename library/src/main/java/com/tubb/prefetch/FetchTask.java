@@ -1,4 +1,4 @@
-package com.tubb.taskbus;
+package com.tubb.prefetch;
 
 import android.support.annotation.Nullable;
 
@@ -9,31 +9,31 @@ import io.reactivex.Scheduler;
  * Created by tubingbing on 18/3/11.
  */
 
-public abstract class AdvanceTask<Data> {
+public abstract class FetchTask<D> {
     private static final short INITIALIZED_STATE = 0;
     static final short EXECUTING_STATE = 1;
     static final short SUCCESS_STATE = 2;
     static final short ERROR_STATE = 3;
     private short state = INITIALIZED_STATE;
     private long taskId;
-    private Data data;
+    private D data;
     private Throwable exception;
 
-    public abstract Observable<Data> execute();
+    public abstract Observable<D> execute();
 
-    public Scheduler subscribeOnScheduler() {
+    protected Scheduler subscribeOnScheduler() {
         return SchedulerProvider.io();
     }
 
-    public Scheduler observeOnScheduler() {
+    protected Scheduler observeOnScheduler() {
         return SchedulerProvider.ui();
     }
 
-    void setData(Data data) {
+    void setData(D data) {
         this.data = data;
     }
 
-    Data getData() {
+    D getData() {
         return this.data;
     }
 
@@ -68,9 +68,9 @@ public abstract class AdvanceTask<Data> {
         setException(null);
     }
 
-    public interface Listener<Data> {
+    public interface Listener<D> {
         void onExecuting();
-        void onSuccess(@Nullable Data data);
+        void onSuccess(@Nullable D data);
         void onError(Throwable throwable);
     }
 }

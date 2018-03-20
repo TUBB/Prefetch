@@ -1,4 +1,4 @@
-package com.tubb.taskbus;
+package com.tubb.prefetch;
 
 import io.reactivex.functions.Consumer;
 
@@ -7,20 +7,20 @@ import io.reactivex.functions.Consumer;
  */
 
 final class TaskExecutor {
-    <Data> void execute(final AdvanceTask<Data> task) {
-        TaskBus.instance().taskExecuting(task);
+    <D> void execute(final FetchTask<D> task) {
+        Prefetch.instance().taskExecuting(task);
         task.execute()
                 .subscribeOn(task.subscribeOnScheduler())
                 .observeOn(task.observeOnScheduler())
-                .subscribe(new Consumer<Data>() {
+                .subscribe(new Consumer<D>() {
                     @Override
-                    public void accept(Data data) throws Exception {
-                        TaskBus.instance().taskExecuteSuccess(task, data);
+                    public void accept(D data) throws Exception {
+                        Prefetch.instance().taskExecuteSuccess(task, data);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        TaskBus.instance().taskExecuteException(task, throwable);
+                        Prefetch.instance().taskExecuteException(task, throwable);
                     }
                 });
     }

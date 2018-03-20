@@ -41,9 +41,9 @@ dependencies {
 
 publish {
     userOrg = 'tubb'
-    groupId = 'com.tubb.taskbus'
-    artifactId = 'taskbus'
+    groupId = 'com.tubb'
+    artifactId = 'prefetch'
     publishVersion = project.versionName
-    desc = 'Task bus for App，use for prefetch data'
-    website = 'https://github.com/TUBB/TaskBus'
+    desc = 'Prefetch data universal library'
+    website = 'https://github.com/TUBB/Prefetch'
 }

@@ -1,4 +1,4 @@
-package com.tubb.taskbus.test;
+package com.tubb.prefetch.test;
 
 /**
  * Created by tubingbing on 18/3/11.

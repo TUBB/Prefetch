@@ -1,11 +1,11 @@
-package com.tubb.taskbus.test;
+package com.tubb.prefetch.test;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.tubb.taskbus.TaskBus;
+import com.tubb.prefetch.Prefetch;
 
 public class MainActivity extends AppCompatActivity {
     private long taskId;
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // prefetch user info data
-        taskId = TaskBus.instance().executeTask(new UserInfoAdvanceTask());
+        taskId = Prefetch.instance().executeTask(new UserInfoFetchTask());
     }
 
     public void viewClick(View view) {

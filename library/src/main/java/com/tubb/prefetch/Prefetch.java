@@ -1,51 +1,64 @@
-package com.tubb.taskbus;
+package com.tubb.prefetch;
 
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
-import static com.tubb.taskbus.EmptyUtils.checkNotNull;
-import static com.tubb.taskbus.EmptyUtils.isNull;
+import static com.tubb.prefetch.EmptyUtils.checkNotNull;
+import static com.tubb.prefetch.EmptyUtils.isNull;
 
 /**
  * Created by tubingbing on 18/3/11.
  */
 
-public final class TaskBus {
-    private static final String TAG = "TaskBus";
-    private static final TaskBus INSTANCE = new TaskBus();
+public final class Prefetch {
+    private static final String TAG = "Prefetch";
+    private static final Prefetch INSTANCE = new Prefetch();
     private TaskExecutor mTaskExecutor = new TaskExecutor();
-    private ArrayMap<Long, AdvanceTask> mTaskMap = new ArrayMap<>(8);
-    private ArrayMap<Long, AdvanceTask.Listener> mListenerMap = new ArrayMap<>(8);
+    private ArrayMap<Long, FetchTask> mTaskMap = new ArrayMap<>(8);
+    private ArrayMap<Long, FetchTask.Listener> mListenerMap = new ArrayMap<>(8);
 
-    private TaskBus() {}
+    private Prefetch() {}
 
-    public static TaskBus instance() {
+    public static Prefetch instance() {
         return INSTANCE;
     }
 
-    public synchronized <Data> long executeTask(final AdvanceTask<Data> task) {
+    public synchronized <D> void executeTask(final long taskId, final FetchTask<D> task) {
+        checkNotNull(task);
+        if (mTaskMap.containsKey(task.getTaskId())) {
+            throw new RuntimeException("You maybe execute the same task again, a task can only execute once!");
+        }
+        execute(taskId, task);
+    }
+
+    public synchronized <D> long executeTask(final FetchTask<D> task) {
         checkNotNull(task);
         if (mTaskMap.containsKey(task.getTaskId())) {
             throw new RuntimeException("A task can only execute once, you should finish the task first!");
         }
         long taskId = System.nanoTime();
+        execute(taskId, task);
+        return taskId;
+    }
+
+    private <D> void execute(final long taskId, final FetchTask<D> task) {
         task.setTaskId(taskId);
         mTaskMap.put(taskId, task);
         mTaskExecutor.execute(task);
-        return taskId;
     }
 
     public synchronized void finishTask(final long taskId) {
         if (!mTaskMap.containsKey(taskId)) {
             throw new RuntimeException(String.format("Not find the target task of %s", taskId));
         }
-        AdvanceTask task = mTaskMap.remove(taskId);
-        task.reset();
+        FetchTask task = mTaskMap.remove(taskId);
+        if (!isNull(task)) // the task maybe null
+            task.reset();
         mListenerMap.remove(taskId);
     }
 
-    public synchronized void registerListener(final long taskId, final AdvanceTask.Listener listener) {
+    public synchronized void registerListener(final long taskId, final FetchTask.Listener listener) {
         checkNotNull(listener);
         if (!mTaskMap.containsKey(taskId)) {
             throw new RuntimeException(String.format("The %s task not execute yet!", taskId));
@@ -59,25 +72,25 @@ public final class TaskBus {
     }
 
     private void notifyListener(final long taskId) {
-        AdvanceTask.Listener listener = mListenerMap.get(taskId);
+        FetchTask.Listener listener = mListenerMap.get(taskId);
         if (isNull(listener)) {
             Log.d(TAG, String.format("Not found %s task listener!", taskId));
             return;
         }
-        AdvanceTask task = mTaskMap.get(taskId);
+        FetchTask task = mTaskMap.get(taskId);
         if (isNull(task)) {
             Log.d(TAG, String.format("Not found %s task!", taskId));
             return;
         }
         short state = task.getState();
         switch (state) {
-            case AdvanceTask.EXECUTING_STATE:
+            case FetchTask.EXECUTING_STATE:
                 listener.onExecuting();
                 break;
-            case AdvanceTask.SUCCESS_STATE:
+            case FetchTask.SUCCESS_STATE:
                 listener.onSuccess(task.getData());
                 break;
-            case AdvanceTask.ERROR_STATE:
+            case FetchTask.ERROR_STATE:
                 listener.onError(task.getException());
                 break;
             default:
@@ -86,19 +99,19 @@ public final class TaskBus {
         }
     }
 
-    synchronized <Data> void taskExecuting(final AdvanceTask<Data> task) {
-        task.setState(AdvanceTask.EXECUTING_STATE);
+    synchronized <D> void taskExecuting(final FetchTask<D> task) {
+        task.setState(FetchTask.EXECUTING_STATE);
         notifyListener(task.getTaskId());
     }
 
-    synchronized <Data> void taskExecuteException(final AdvanceTask<Data> task, Throwable exception) {
-        task.setState(AdvanceTask.ERROR_STATE);
+    synchronized <D> void taskExecuteException(final FetchTask<D> task, Throwable exception) {
+        task.setState(FetchTask.ERROR_STATE);
         task.setException(exception);
         notifyListener(task.getTaskId());
     }
 
-    synchronized <Data> void taskExecuteSuccess(final AdvanceTask<Data> task, @Nullable final Data data) {
-        task.setState(AdvanceTask.SUCCESS_STATE);
+    synchronized <D> void taskExecuteSuccess(final FetchTask<D> task, @Nullable final D data) {
+        task.setState(FetchTask.SUCCESS_STATE);
         task.setData(data);
         notifyListener(task.getTaskId());
     }
