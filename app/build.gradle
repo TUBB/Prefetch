@@ -4,7 +4,7 @@ android {
     compileSdkVersion project.compileSdkVersion
     buildToolsVersion project.buildToolsVersion
     defaultConfig {
-        applicationId "com.tubb.taskbus.test"
+        applicationId "com.tubb.prefetch.test"
         minSdkVersion project.minSdkVersion
         targetSdkVersion project.targetSdkVersion
         versionCode project.versionCode
