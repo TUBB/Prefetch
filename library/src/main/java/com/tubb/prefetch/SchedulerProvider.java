@@ -5,6 +5,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
+ * RxJava Scheduler provider
  * Created by tubingbing on 2017/12/18.
  */
 

@@ -6,6 +6,7 @@ import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 
 /**
+ * The abstract fetch data task
  * Created by tubingbing on 18/3/11.
  */
 
@@ -14,17 +15,39 @@ public abstract class FetchTask<D> {
     static final short EXECUTING_STATE = 1;
     static final short SUCCESS_STATE = 2;
     static final short ERROR_STATE = 3;
+    /**
+     * the task current state
+     * */
     private short state = INITIALIZED_STATE;
+    /**
+     * task id
+     * */
     private long taskId;
+    /**
+     * fetched data
+     * */
     private D data;
+    /**
+     * the task execute occur exception
+     * */
     private Throwable exception;
 
+    /**
+     * Execute the task
+     * @return RxJava observable
+     */
     public abstract Observable<D> execute();
 
+    /**
+     * @return subscribe on Scheduler
+     */
     protected Scheduler subscribeOnScheduler() {
         return SchedulerProvider.io();
     }
 
+    /**
+     * @return observe on Scheduler
+     */
     protected Scheduler observeOnScheduler() {
         return SchedulerProvider.ui();
     }
@@ -68,9 +91,26 @@ public abstract class FetchTask<D> {
         setException(null);
     }
 
+    /**
+     * Fetch task's result listener
+     * @param <D> data generic
+     */
     public interface Listener<D> {
+        /**
+         * Fetch task is executing
+         */
         void onExecuting();
+
+        /**
+         * Fetch task execute success
+         * @param data task fetched data
+         */
         void onSuccess(@Nullable D data);
+
+        /**
+         * Fetch task execute fail
+         * @param throwable task occur exception
+         */
         void onError(Throwable throwable);
     }
 }

@@ -1,6 +1,7 @@
 package com.tubb.prefetch;
 
 /**
+ * Check null utils
  * Created by tubingbing on 2017/12/18.
  */
 

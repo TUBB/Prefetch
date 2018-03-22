@@ -8,14 +8,24 @@ import static com.tubb.prefetch.EmptyUtils.checkNotNull;
 import static com.tubb.prefetch.EmptyUtils.isNull;
 
 /**
+ * Prefetch data universal library
  * Created by tubingbing on 18/3/11.
  */
 
 public final class Prefetch {
     private static final String TAG = "Prefetch";
     private static final Prefetch INSTANCE = new Prefetch();
+    /**
+     * Task executor, real execute the task
+     */
     private TaskExecutor mTaskExecutor = new TaskExecutor();
+    /**
+     * Current task map, key is the task id and value is the task
+     */
     private ArrayMap<Long, FetchTask> mTaskMap = new ArrayMap<>(8);
+    /**
+     * Task result listener map, key is the task id and value is the listener
+     */
     private ArrayMap<Long, FetchTask.Listener> mListenerMap = new ArrayMap<>(8);
 
     private Prefetch() {}
@@ -24,6 +34,12 @@ public final class Prefetch {
         return INSTANCE;
     }
 
+    /**
+     * Execute the task with self task id
+     * @param taskId task id
+     * @param task your custom task
+     * @param <D> data generic
+     */
     public synchronized <D> void executeTask(final long taskId, final FetchTask<D> task) {
         checkNotNull(task);
         if (mTaskMap.containsKey(task.getTaskId())) {
@@ -32,6 +48,12 @@ public final class Prefetch {
         execute(taskId, task);
     }
 
+    /**
+     * Execute the task
+     * @param task your custom task
+     * @param <D> data generic
+     * @return task id with System.nanoTime()
+     */
     public synchronized <D> long executeTask(final FetchTask<D> task) {
         checkNotNull(task);
         if (mTaskMap.containsKey(task.getTaskId())) {
@@ -48,6 +70,10 @@ public final class Prefetch {
         mTaskExecutor.execute(task);
     }
 
+    /**
+     * Finished the task, then you can execute the same task again
+     * @param taskId task id
+     */
     public synchronized void finishTask(final long taskId) {
         if (!mTaskMap.containsKey(taskId)) {
             throw new RuntimeException(String.format("Not find the target task of %s", taskId));
@@ -58,6 +84,11 @@ public final class Prefetch {
         mListenerMap.remove(taskId);
     }
 
+    /**
+     * Register listener to listen the task's result
+     * @param taskId task id
+     * @param listener FetchTask.Listener
+     */
     public synchronized void registerListener(final long taskId, final FetchTask.Listener listener) {
         checkNotNull(listener);
         if (!mTaskMap.containsKey(taskId)) {
@@ -67,6 +98,10 @@ public final class Prefetch {
         notifyListener(taskId);
     }
 
+    /**
+     * Unregister listener of task's result
+     * @param taskId task id
+     */
     public synchronized void unregisterListener(final long taskId) {
         mListenerMap.remove(taskId);
     }
