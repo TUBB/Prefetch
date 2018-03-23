@@ -1,36 +1,57 @@
 package com.tubb.prefetch;
 
-import io.reactivex.functions.Consumer;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import static com.tubb.prefetch.EmptyUtils.checkNotNull;
 
 /**
- * Task executor, RxJava is the container
- * Created by tubingbing on 18/3/11.
+ * Task executor, RxJava is the execute container
+ * Note:
+ * Must callback onExecuting(), onExecuteSuccess() and onExecuteError() method.
+ * Otherwise registered listeners will not working!
+ * Please see DefaultTaskExecutor for detail.
+ * Created by tubingbing on 18/3/23.
  */
 
-final class TaskExecutor {
+public abstract class TaskExecutor {
+
     /**
      * Real execute the task
      * @param task the target task
      * @param <D> data generic
      */
-    <D> void execute(final FetchTask<D> task) {
-        // notify task is executing
+    public abstract <D> void execute(final FetchTask<D> task);
+
+    /**
+     * Task is executing
+     * @param task target task
+     * @param <D> data generic
+     */
+    protected <D> void onExecuting(@NonNull final FetchTask<D> task) {
+        checkNotNull(task);
         Prefetch.instance().taskExecuting(task);
-        task.execute()
-                .subscribeOn(task.subscribeOnScheduler())
-                .observeOn(task.observeOnScheduler())
-                .subscribe(new Consumer<D>() {
-                    @Override
-                    public void accept(D data) throws Exception {
-                        // notify task execute success
-                        Prefetch.instance().taskExecuteSuccess(task, data);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        // notify task execute fail
-                        Prefetch.instance().taskExecuteException(task, throwable);
-                    }
-                });
+    }
+
+    /**
+     * Task execute success
+     * @param task target task
+     * @param data fetched data
+     * @param <D> data generic
+     */
+    protected <D> void onExecuteSuccess(@NonNull final FetchTask<D> task, @Nullable D data) {
+        checkNotNull(task);
+        Prefetch.instance().taskExecuteSuccess(task, data);
+    }
+
+    /**
+     * Task execute fail
+     * @param task target task
+     * @param throwable task occur exception
+     * @param <D> data generic
+     */
+    protected <D> void onExecuteError(@NonNull final FetchTask<D> task, @Nullable Throwable throwable) {
+        checkNotNull(task);
+        Prefetch.instance().taskExecuteException(task, throwable);
     }
 }

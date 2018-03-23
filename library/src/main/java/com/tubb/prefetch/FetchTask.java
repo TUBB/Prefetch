@@ -41,14 +41,14 @@ public abstract class FetchTask<D> {
     /**
      * @return subscribe on Scheduler
      */
-    protected Scheduler subscribeOnScheduler() {
+    public Scheduler subscribeOnScheduler() {
         return SchedulerProvider.io();
     }
 
     /**
      * @return observe on Scheduler
      */
-    protected Scheduler observeOnScheduler() {
+    public Scheduler observeOnScheduler() {
         return SchedulerProvider.ui();
     }
 

@@ -16,9 +16,9 @@ public final class Prefetch {
     private static final String TAG = "Prefetch";
     private static final Prefetch INSTANCE = new Prefetch();
     /**
-     * Task executor, real execute the task
+     * Prefetch config
      */
-    private TaskExecutor mTaskExecutor = new TaskExecutor();
+    private PrefetchConfig mConfig;
     /**
      * Current task map, key is the task id and value is the task
      */
@@ -28,38 +28,35 @@ public final class Prefetch {
      */
     private ArrayMap<Long, FetchTask.Listener> mListenerMap = new ArrayMap<>(8);
 
-    private Prefetch() {}
+    private Prefetch() {
+        mConfig = new PrefetchConfig.Builder().build();
+    }
 
     public static Prefetch instance() {
         return INSTANCE;
     }
 
     /**
-     * Execute the task with self task id
-     * @param taskId task id
-     * @param task your custom task
-     * @param <D> data generic
+     * Init Prefetch with custom config
+     * @param config custom PrefetchConfig
      */
-    public synchronized <D> void executeTask(final long taskId, final FetchTask<D> task) {
-        checkNotNull(task);
-        if (mTaskMap.containsKey(task.getTaskId())) {
-            throw new RuntimeException("You maybe execute the same task again, a task can only execute once!");
-        }
-        execute(taskId, task);
+    public void init(PrefetchConfig config) {
+        checkNotNull(config);
+        mConfig = config;
     }
 
     /**
      * Execute the task
      * @param task your custom task
      * @param <D> data generic
-     * @return task id with System.nanoTime()
+     * @return task id
      */
     public synchronized <D> long executeTask(final FetchTask<D> task) {
         checkNotNull(task);
         if (mTaskMap.containsKey(task.getTaskId())) {
             throw new RuntimeException("A task can only execute once, you should finish the task first!");
         }
-        long taskId = System.nanoTime();
+        long taskId = mConfig.getTaskIdGenerator().generateTaskId(task);
         execute(taskId, task);
         return taskId;
     }
@@ -67,7 +64,7 @@ public final class Prefetch {
     private <D> void execute(final long taskId, final FetchTask<D> task) {
         task.setTaskId(taskId);
         mTaskMap.put(taskId, task);
-        mTaskExecutor.execute(task);
+        mConfig.getTaskExecutor().execute(task);
     }
 
     /**

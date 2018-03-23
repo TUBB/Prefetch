@@ -1,7 +1,7 @@
 # Prefetch
-![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v1.0.0-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v1.1.0-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-[中文文档](http://tubb.github.io/2018/03/20/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%8F%96%E5%B0%8F%E8%BD%AE%E5%AD%90/)
+- [中文文档](http://tubb.github.io/2018/03/20/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%8F%96%E5%B0%8F%E8%BD%AE%E5%AD%90/)
 
 Prefetch data universal library.
 - Simple, light-weight and low intrusiveness.
@@ -13,7 +13,7 @@ Prefetch data universal library.
 
 # Download
 ```groovy
-implementation 'com.tubb:prefetch:1.0.0'
+implementation 'com.tubb:prefetch:1.1.0'
 ```
 
 # Usage
@@ -106,6 +106,23 @@ public class UserInfoActivity extends AppCompatActivity implements FetchTask.Lis
     }
 }
 ```
+
+# Custom
+You can provide [TaskIdGenerator](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TaskIdGenerator.java) and [TaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TaskExecutor.java) with [PrefetchConfig](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PrefetchConfig.java) for special logic
+```java
+public class App extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // init Prefetch
+        Prefetch.instance().init(new PrefetchConfig.Builder()
+                .taskIdGenerator(new UUIDTaskIdGenerator())
+                .taskExecutor(new TestTaskExecutor())
+                .build());
+    }
+}
+```
+
 # Note
 - A task can only execute once. If you want reuse the fetch task, you should finish the fetch task first!
 ```java
