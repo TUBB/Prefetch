@@ -47,12 +47,12 @@ public final class Prefetch {
     }
 
     /**
-     * Execute the task
+     * Execute the PureFetchTask
      * @param task your custom task
      * @param <D> data generic
      * @return task id
      */
-    public synchronized <D> long executeTask(@NonNull final FetchTask<D> task) {
+    public synchronized <D> long executeTask(@NonNull final PureFetchTask<D> task) {
         checkNotNull(task, "task = null");
         if (mTaskMap.containsKey(task.getTaskId())) {
             throw new RuntimeException("A task can only execute once, you should finish the task first!");
@@ -62,10 +62,32 @@ public final class Prefetch {
         return taskId;
     }
 
-    private <D> void execute(final long taskId, final FetchTask<D> task) {
+    private <D> void execute(final long taskId, final PureFetchTask<D> task) {
         task.setTaskId(taskId);
         mTaskMap.put(taskId, task);
-        mConfig.getTaskExecutor().execute(task);
+        mConfig.getPureTaskExecutor().execute(task);
+    }
+
+    /**
+     * Execute the ObservableFetchTask
+     * @param task your custom task
+     * @param <D> data generic
+     * @return task id
+     */
+    public synchronized <D> long executeTask(@NonNull final ObservableFetchTask<D> task) {
+        checkNotNull(task, "task = null");
+        if (mTaskMap.containsKey(task.getTaskId())) {
+            throw new RuntimeException("A task can only execute once, you should finish the task first!");
+        }
+        long taskId = mConfig.getTaskIdGenerator().generateTaskId(task);
+        execute(taskId, task);
+        return taskId;
+    }
+
+    private <D> void execute(final long taskId, final ObservableFetchTask<D> task) {
+        task.setTaskId(taskId);
+        mTaskMap.put(taskId, task);
+        mConfig.getObservableTaskExecutor().execute(task);
     }
 
     /**
@@ -85,7 +107,7 @@ public final class Prefetch {
     /**
      * Register listener to listen the task's result
      * @param taskId task id
-     * @param listener FetchTask.Listener
+     * @param listener ObservableFetchTask.Listener
      */
     public synchronized void registerListener(final long taskId, @NonNull final FetchTask.Listener listener) {
         checkNotNull(listener, "listener = null");
@@ -105,7 +127,7 @@ public final class Prefetch {
     }
 
     private void notifyListener(final long taskId) {
-        FetchTask.Listener listener = mListenerMap.get(taskId);
+        ObservableFetchTask.Listener listener = mListenerMap.get(taskId);
         if (isNull(listener)) {
             Log.d(TAG, String.format("Not found %s task listener!", taskId));
             return;
@@ -117,13 +139,13 @@ public final class Prefetch {
         }
         short state = task.getState();
         switch (state) {
-            case FetchTask.EXECUTING_STATE:
+            case ObservableFetchTask.EXECUTING_STATE:
                 listener.onExecuting();
                 break;
-            case FetchTask.SUCCESS_STATE:
+            case ObservableFetchTask.SUCCESS_STATE:
                 listener.onSuccess(task.getData());
                 break;
-            case FetchTask.ERROR_STATE:
+            case ObservableFetchTask.ERROR_STATE:
                 listener.onError(task.getException());
                 break;
             default:
@@ -132,18 +154,18 @@ public final class Prefetch {
         }
     }
 
-    synchronized <D> void taskExecuting(final FetchTask<D> task) {
+    synchronized <D, E> void taskExecuting(final FetchTask<D, E> task) {
         task.setState(FetchTask.EXECUTING_STATE);
         notifyListener(task.getTaskId());
     }
 
-    synchronized <D> void taskExecuteException(final FetchTask<D> task, Throwable exception) {
+    synchronized <D, E> void taskExecuteException(final FetchTask<D, E> task, Throwable exception) {
         task.setState(FetchTask.ERROR_STATE);
         task.setException(exception);
         notifyListener(task.getTaskId());
     }
 
-    synchronized <D> void taskExecuteSuccess(final FetchTask<D> task, @Nullable final D data) {
+    synchronized <D, E> void taskExecuteSuccess(final FetchTask<D, E> task, @Nullable final D data) {
         task.setState(FetchTask.SUCCESS_STATE);
         task.setData(data);
         notifyListener(task.getTaskId());

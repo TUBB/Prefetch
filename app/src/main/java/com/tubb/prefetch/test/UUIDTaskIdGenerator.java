@@ -1,6 +1,7 @@
 package com.tubb.prefetch.test;
 
 import com.tubb.prefetch.FetchTask;
+import com.tubb.prefetch.ObservableFetchTask;
 import com.tubb.prefetch.TaskIdGenerator;
 
 import java.util.UUID;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 public class UUIDTaskIdGenerator implements TaskIdGenerator {
     @Override
-    public <D> long generateTaskId(FetchTask<D> task) {
+    public <D, E> long generateTaskId(FetchTask<D, E> task) {
         return UUID.randomUUID().toString().hashCode();
     }
 }

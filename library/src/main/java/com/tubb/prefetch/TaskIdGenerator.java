@@ -7,10 +7,10 @@ package com.tubb.prefetch;
 
 public interface TaskIdGenerator {
     /**
-     * Generate task id for FetchTask
+     * Generate task id for ObservableFetchTask
      * @param task the target task
      * @param <D> data generic
      * @return task id
      */
-    <D> long generateTaskId(final FetchTask<D> task);
+    <D, E> long generateTaskId(final FetchTask<D, E> task);
 }

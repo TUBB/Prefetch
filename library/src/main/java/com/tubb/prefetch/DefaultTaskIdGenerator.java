@@ -7,7 +7,7 @@ package com.tubb.prefetch;
 
 final class DefaultTaskIdGenerator implements TaskIdGenerator {
     @Override
-    public <D> long generateTaskId(final FetchTask<D> task) {
+    public <D, E> long generateTaskId(final FetchTask<D, E> task) {
         return System.nanoTime();
     }
 }

@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // prefetch user info data
-        taskId = Prefetch.instance().executeTask(new UserInfoFetchTask());
+        // taskId = Prefetch.instance().executeTask(new UserInfoObservableFetchTask());
+        taskId = Prefetch.instance().executeTask(new UserInfoPureFetchTask());
     }
 
     public void viewClick(View view) {

@@ -6,14 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.tubb.prefetch.FetchTask;
+import com.tubb.prefetch.ObservableFetchTask;
 import com.tubb.prefetch.Prefetch;
 
 /**
  * Created by tubingbing on 18/3/11.
  */
 
-public class UserInfoActivity extends AppCompatActivity implements FetchTask.Listener<UserInfo> {
+public class UserInfoActivity extends AppCompatActivity implements ObservableFetchTask.Listener<UserInfo> {
     private static final String TAG = "Prefetch";
     private long taskId;
     private TextView tv_user_name;

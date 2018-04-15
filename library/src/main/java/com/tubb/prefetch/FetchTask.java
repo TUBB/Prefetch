@@ -1,56 +1,37 @@
 package com.tubb.prefetch;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-
 /**
- * The abstract fetch data task
- * Created by tubingbing on 18/3/11.
+ * Created by tubingbing on 18/4/15.
  */
 
-public abstract class FetchTask<D> {
+public abstract class FetchTask<D, E> {
+
     private static final short INITIALIZED_STATE = 0;
-    static final short EXECUTING_STATE = 1;
-    static final short SUCCESS_STATE = 2;
-    static final short ERROR_STATE = 3;
+    protected static final short EXECUTING_STATE = 1;
+    protected static final short SUCCESS_STATE = 2;
+    protected static final short ERROR_STATE = 3;
     /**
      * the task current state
      * */
-    private short state = INITIALIZED_STATE;
+    protected short state = INITIALIZED_STATE;
     /**
      * task id
      * */
-    private long taskId;
+    protected long taskId;
     /**
      * fetched data
      * */
-    private D data;
+    protected D data;
     /**
      * the task execute occur exception
      * */
-    private Throwable exception;
+    protected Throwable exception;
 
-    /**
-     * Execute the task
-     * @return RxJava observable
-     */
-    public abstract Observable<D> execute();
-
-    /**
-     * @return subscribe on Scheduler
-     */
-    public Scheduler subscribeOnScheduler() {
-        return SchedulerProvider.io();
-    }
-
-    /**
-     * @return observe on Scheduler
-     */
-    public Scheduler observeOnScheduler() {
-        return SchedulerProvider.ui();
-    }
+    @NonNull
+    public abstract E execute();
 
     void setData(D data) {
         this.data = data;

@@ -3,6 +3,8 @@ package com.tubb.prefetch;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import io.reactivex.Observable;
+
 import static com.tubb.prefetch.CheckUtils.checkNotNull;
 
 /**
@@ -10,25 +12,23 @@ import static com.tubb.prefetch.CheckUtils.checkNotNull;
  * Note:
  * Must callback onExecuting(), onExecuteSuccess() and onExecuteError() method.
  * Otherwise registered listeners will not working!
- * Please see DefaultTaskExecutor for detail.
+ * Please see DefaultObservableTaskExecutor for detail.
  * Created by tubingbing on 18/3/23.
  */
 
-public abstract class TaskExecutor {
+public abstract class PureTaskExecutor {
 
     /**
      * Real execute the task
      * @param task the target task
      * @param <D> data generic
      */
-    public abstract <D> void execute(final FetchTask<D> task);
-
+    public abstract <D> void execute(final FetchTask<D, D> task);
     /**
      * Task is executing
      * @param task target task
-     * @param <D> data generic
      */
-    protected <D> void onExecuting(@NonNull final FetchTask<D> task) {
+    protected <D> void onExecuting(@NonNull final FetchTask<D, D> task) {
         checkNotNull(task, "task = null");
         Prefetch.instance().taskExecuting(task);
     }
@@ -37,9 +37,8 @@ public abstract class TaskExecutor {
      * Task execute success
      * @param task target task
      * @param data fetched data
-     * @param <D> data generic
      */
-    protected <D> void onExecuteSuccess(@NonNull final FetchTask<D> task, @Nullable D data) {
+    protected <D> void onExecuteSuccess(@NonNull final FetchTask<D, D> task, @Nullable D data) {
         checkNotNull(task, "task = null");
         Prefetch.instance().taskExecuteSuccess(task, data);
     }
@@ -48,9 +47,8 @@ public abstract class TaskExecutor {
      * Task execute fail
      * @param task target task
      * @param throwable task occur exception
-     * @param <D> data generic
      */
-    protected <D> void onExecuteError(@NonNull final FetchTask<D> task, @Nullable Throwable throwable) {
+    protected <D> void onExecuteError(@NonNull final FetchTask<D, D> task, @Nullable Throwable throwable) {
         checkNotNull(task, "task = null");
         Prefetch.instance().taskExecuteException(task, throwable);
     }

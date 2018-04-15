@@ -17,7 +17,8 @@ public class App extends Application {
         // init Prefetch
         Prefetch.instance().init(new PrefetchConfig.Builder()
                 .taskIdGenerator(new UUIDTaskIdGenerator())
-                .taskExecutor(new TestTaskExecutor())
+                .observableTaskExecutor(new TestObservableTaskExecutor())
+                .pureTaskExecutor(new TestPureTaskExecutor())
                 .build());
     }
 }

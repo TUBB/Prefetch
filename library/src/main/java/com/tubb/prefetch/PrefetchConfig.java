@@ -16,9 +16,13 @@ public final class PrefetchConfig {
      */
     private TaskIdGenerator taskIdGenerator;
     /**
-     * Task executor
+     * Observable Task executor
      */
-    private TaskExecutor taskExecutor;
+    private ObservableTaskExecutor observableTaskExecutor;
+    /**
+     * Pure Task executor
+     */
+    private PureTaskExecutor pureTaskExecutor;
 
     private PrefetchConfig(Builder builder) {
         if (!isNull(builder.taskIdGenerator)) {
@@ -26,10 +30,15 @@ public final class PrefetchConfig {
         } else {
             this.taskIdGenerator = new DefaultTaskIdGenerator();
         }
-        if (!isNull(builder.taskExecutor)) {
-            this.taskExecutor = builder.taskExecutor;
+        if (!isNull(builder.observableTaskExecutor)) {
+            this.observableTaskExecutor = builder.observableTaskExecutor;
         } else {
-            this.taskExecutor = new DefaultTaskExecutor();
+            this.observableTaskExecutor = new DefaultObservableTaskExecutor();
+        }
+        if (!isNull(builder.pureTaskExecutor)) {
+            this.pureTaskExecutor = builder.pureTaskExecutor;
+        } else {
+            this.pureTaskExecutor = new DefaultPureTaskExecutor();
         }
     }
 
@@ -37,13 +46,18 @@ public final class PrefetchConfig {
         return taskIdGenerator;
     }
 
-    TaskExecutor getTaskExecutor() {
-        return taskExecutor;
+    ObservableTaskExecutor getObservableTaskExecutor() {
+        return observableTaskExecutor;
+    }
+
+    PureTaskExecutor getPureTaskExecutor() {
+        return pureTaskExecutor;
     }
 
     public final static class Builder {
         private TaskIdGenerator taskIdGenerator;
-        private TaskExecutor taskExecutor;
+        private ObservableTaskExecutor observableTaskExecutor;
+        private PureTaskExecutor pureTaskExecutor;
 
         public Builder taskIdGenerator(@NonNull final TaskIdGenerator taskIdGenerator) {
             checkNotNull(taskIdGenerator, "taskIdGenerator = null");
@@ -51,9 +65,15 @@ public final class PrefetchConfig {
             return this;
         }
 
-        public Builder taskExecutor(@NonNull final TaskExecutor taskExecutor) {
-            checkNotNull(taskExecutor, "taskExecutor = null");
-            this.taskExecutor = taskExecutor;
+        public Builder observableTaskExecutor(@NonNull final ObservableTaskExecutor observableTaskExecutor) {
+            checkNotNull(observableTaskExecutor, "observableTaskExecutor = null");
+            this.observableTaskExecutor = observableTaskExecutor;
+            return this;
+        }
+
+        public Builder pureTaskExecutor(@NonNull final PureTaskExecutor pureTaskExecutor) {
+            checkNotNull(pureTaskExecutor, "pureTaskExecutor = null");
+            this.pureTaskExecutor = pureTaskExecutor;
             return this;
         }
 

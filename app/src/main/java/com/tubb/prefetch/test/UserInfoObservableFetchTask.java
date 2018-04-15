@@ -1,6 +1,8 @@
 package com.tubb.prefetch.test;
 
-import com.tubb.prefetch.FetchTask;
+import android.support.annotation.NonNull;
+
+import com.tubb.prefetch.ObservableFetchTask;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -10,8 +12,9 @@ import io.reactivex.ObservableOnSubscribe;
  * Created by tubingbing on 18/3/11.
  */
 
-public class UserInfoFetchTask extends FetchTask<UserInfo> {
+public class UserInfoObservableFetchTask extends ObservableFetchTask<UserInfo> {
     @Override
+    @NonNull
     public Observable<UserInfo> execute() {
         return Observable.create(new ObservableOnSubscribe<UserInfo>() {
             @Override

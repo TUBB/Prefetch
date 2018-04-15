@@ -1,22 +1,28 @@
 package com.tubb.prefetch.test;
 
 import com.tubb.prefetch.FetchTask;
-import com.tubb.prefetch.TaskExecutor;
+import com.tubb.prefetch.ObservableFetchTask;
+import com.tubb.prefetch.ObservableTaskExecutor;
 
+import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 
 /**
- * Task executor, just for test
+ * ObservableTask Task executor, just for test
  * Created by tubingbing on 18/3/23.
  */
 
-public class TestTaskExecutor extends TaskExecutor {
+public class TestObservableTaskExecutor extends ObservableTaskExecutor {
     @Override
-    public <D> void execute(final FetchTask<D> task) {
+    public <D> void execute(final FetchTask<D, Observable<D>> task) {
+        if (!(task instanceof ObservableFetchTask)) {
+            throw new RuntimeException("Please execute the ObservableFetchTask<D>");
+        }
+        ObservableFetchTask<D> observableFetchTask = (ObservableFetchTask<D>)task;
         onExecuting(task);
         task.execute()
-                .subscribeOn(task.subscribeOnScheduler())
-                .observeOn(task.observeOnScheduler())
+                .subscribeOn(observableFetchTask.subscribeOnScheduler())
+                .observeOn(observableFetchTask.observeOnScheduler())
                 .subscribe(new Consumer<D>() {
                     @Override
                     public void accept(D data) throws Exception {
