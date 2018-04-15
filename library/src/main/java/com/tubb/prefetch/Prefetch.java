@@ -1,11 +1,12 @@
 package com.tubb.prefetch;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
-import static com.tubb.prefetch.EmptyUtils.checkNotNull;
-import static com.tubb.prefetch.EmptyUtils.isNull;
+import static com.tubb.prefetch.CheckUtils.checkNotNull;
+import static com.tubb.prefetch.CheckUtils.isNull;
 
 /**
  * Prefetch data universal library
@@ -40,8 +41,8 @@ public final class Prefetch {
      * Init Prefetch with custom config
      * @param config custom PrefetchConfig
      */
-    public void init(PrefetchConfig config) {
-        checkNotNull(config);
+    public void init(@NonNull PrefetchConfig config) {
+        checkNotNull(config, "config = null");
         mConfig = config;
     }
 
@@ -51,8 +52,8 @@ public final class Prefetch {
      * @param <D> data generic
      * @return task id
      */
-    public synchronized <D> long executeTask(final FetchTask<D> task) {
-        checkNotNull(task);
+    public synchronized <D> long executeTask(@NonNull final FetchTask<D> task) {
+        checkNotNull(task, "task = null");
         if (mTaskMap.containsKey(task.getTaskId())) {
             throw new RuntimeException("A task can only execute once, you should finish the task first!");
         }
@@ -86,8 +87,8 @@ public final class Prefetch {
      * @param taskId task id
      * @param listener FetchTask.Listener
      */
-    public synchronized void registerListener(final long taskId, final FetchTask.Listener listener) {
-        checkNotNull(listener);
+    public synchronized void registerListener(final long taskId, @NonNull final FetchTask.Listener listener) {
+        checkNotNull(listener, "listener = null");
         if (!mTaskMap.containsKey(taskId)) {
             throw new RuntimeException(String.format("The %s task not execute yet!", taskId));
         }

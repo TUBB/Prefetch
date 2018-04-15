@@ -5,11 +5,11 @@ package com.tubb.prefetch;
  * Created by tubingbing on 2017/12/18.
  */
 
-final class EmptyUtils {
-    private EmptyUtils() {}
-    static <T> T checkNotNull(T ref) {
+final class CheckUtils {
+    private CheckUtils() {}
+    static <T> T checkNotNull(T ref, String msg) {
         if (ref == null) {
-            throw new NullPointerException();
+            throw new NullPointerException(msg);
         }
         return ref;
     }

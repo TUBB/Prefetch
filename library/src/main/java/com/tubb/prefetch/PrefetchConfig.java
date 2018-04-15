@@ -1,7 +1,9 @@
 package com.tubb.prefetch;
 
-import static com.tubb.prefetch.EmptyUtils.checkNotNull;
-import static com.tubb.prefetch.EmptyUtils.isNull;
+import android.support.annotation.NonNull;
+
+import static com.tubb.prefetch.CheckUtils.checkNotNull;
+import static com.tubb.prefetch.CheckUtils.isNull;
 
 /**
  * Prefetch global config
@@ -43,14 +45,14 @@ public final class PrefetchConfig {
         private TaskIdGenerator taskIdGenerator;
         private TaskExecutor taskExecutor;
 
-        public Builder taskIdGenerator(final TaskIdGenerator taskIdGenerator) {
-            checkNotNull(taskIdGenerator);
+        public Builder taskIdGenerator(@NonNull final TaskIdGenerator taskIdGenerator) {
+            checkNotNull(taskIdGenerator, "taskIdGenerator = null");
             this.taskIdGenerator = taskIdGenerator;
             return this;
         }
 
-        public Builder taskExecutor(final TaskExecutor taskExecutor) {
-            checkNotNull(taskExecutor);
+        public Builder taskExecutor(@NonNull final TaskExecutor taskExecutor) {
+            checkNotNull(taskExecutor, "taskExecutor = null");
             this.taskExecutor = taskExecutor;
             return this;
         }

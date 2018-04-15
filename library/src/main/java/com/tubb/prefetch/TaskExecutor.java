@@ -3,7 +3,7 @@ package com.tubb.prefetch;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import static com.tubb.prefetch.EmptyUtils.checkNotNull;
+import static com.tubb.prefetch.CheckUtils.checkNotNull;
 
 /**
  * Task executor, RxJava is the execute container
@@ -29,7 +29,7 @@ public abstract class TaskExecutor {
      * @param <D> data generic
      */
     protected <D> void onExecuting(@NonNull final FetchTask<D> task) {
-        checkNotNull(task);
+        checkNotNull(task, "task = null");
         Prefetch.instance().taskExecuting(task);
     }
 
@@ -40,7 +40,7 @@ public abstract class TaskExecutor {
      * @param <D> data generic
      */
     protected <D> void onExecuteSuccess(@NonNull final FetchTask<D> task, @Nullable D data) {
-        checkNotNull(task);
+        checkNotNull(task, "task = null");
         Prefetch.instance().taskExecuteSuccess(task, data);
     }
 
@@ -51,7 +51,7 @@ public abstract class TaskExecutor {
      * @param <D> data generic
      */
     protected <D> void onExecuteError(@NonNull final FetchTask<D> task, @Nullable Throwable throwable) {
-        checkNotNull(task);
+        checkNotNull(task, "task = null");
         Prefetch.instance().taskExecuteException(task, throwable);
     }
 }
