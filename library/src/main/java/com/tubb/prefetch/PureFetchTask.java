@@ -1,7 +1,6 @@
 package com.tubb.prefetch;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 /**
  * The abstract fetch data task

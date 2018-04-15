@@ -1,9 +1,9 @@
 # Prefetch
-![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v1.1.0-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v2.0.0-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 - [中文文档](http://tubb.github.io/2018/03/20/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%8F%96%E5%B0%8F%E8%BD%AE%E5%AD%90/)
 
-Prefetch data universal library.
+Prefetch data universal library for Activity.
 - Simple, light-weight and low intrusiveness.
 - Reuse existing `Data Layer`.
 - Support RxJava. 
@@ -13,14 +13,15 @@ Prefetch data universal library.
 
 # Download
 ```groovy
-implementation 'com.tubb:prefetch:1.1.0'
+implementation 'com.tubb:prefetch:2.0.0'
 ```
 
 # Usage
-- Extends the [FetchTask](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/FetchTask.java) class, define the fetch task.
+- Extends the [ObservableFetchTask](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/ObservableFetchTask.java) class, define the fetch task.
 ```java
-public class UserInfoFetchTask extends FetchTask<UserInfo> {
+public class UserInfoObservableFetchTask extends ObservableFetchTask<UserInfo> {
     @Override
+    @NonNull
     public Observable<UserInfo> execute() {
         return Observable.create(new ObservableOnSubscribe<UserInfo>() {
             @Override
@@ -35,6 +36,7 @@ public class UserInfoFetchTask extends FetchTask<UserInfo> {
     }
 }
 ```
+- If you want to return the pure data, please see [UserInfoPureFetchTask](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/UserInfoPureFetchTask.java).
 - Execute the fetch task, prefetch the data and return the `taskId` you will need.
 ```java
 public class MainActivity extends AppCompatActivity {
@@ -50,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // prefetch user info data
-        taskId = Prefetch.instance().executeTask(new UserInfoFetchTask());
+        taskId = Prefetch.instance().executeTask(new UserInfoObservableFetchTask());
+        // taskId = Prefetch.instance().executeTask(new UserInfoPureFetchTask());
     }
 
     public void viewClick(View view) {
@@ -108,7 +111,7 @@ public class UserInfoActivity extends AppCompatActivity implements FetchTask.Lis
 ```
 
 # Custom
-You can provide [TaskIdGenerator](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TaskIdGenerator.java) and [TaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TaskExecutor.java) with [PrefetchConfig](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PrefetchConfig.java) for special logic
+You can provide [TaskIdGenerator](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TaskIdGenerator.java)、[TestObservableTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TestObservableTaskExecutor.java) and [TestPureTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TestPureTaskExecutor.java) with [PrefetchConfig](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PrefetchConfig.java) for special logic.
 ```java
 public class App extends Application {
     @Override
@@ -117,7 +120,8 @@ public class App extends Application {
         // init Prefetch
         Prefetch.instance().init(new PrefetchConfig.Builder()
                 .taskIdGenerator(new UUIDTaskIdGenerator())
-                .taskExecutor(new TestTaskExecutor())
+                .observableTaskExecutor(new TestObservableTaskExecutor())
+                .pureTaskExecutor(new TestPureTaskExecutor())
                 .build());
     }
 }
@@ -147,4 +151,4 @@ Prefetch.instance().unregisterListener(taskId);
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
-    limitations under the License.
+    limitations under the License.    

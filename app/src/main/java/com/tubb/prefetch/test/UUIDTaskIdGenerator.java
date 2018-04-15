@@ -1,7 +1,6 @@
 package com.tubb.prefetch.test;
 
 import com.tubb.prefetch.FetchTask;
-import com.tubb.prefetch.ObservableFetchTask;
 import com.tubb.prefetch.TaskIdGenerator;
 
 import java.util.UUID;
