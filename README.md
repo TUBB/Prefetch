@@ -111,7 +111,7 @@ public class UserInfoActivity extends AppCompatActivity implements FetchTask.Lis
 ```
 
 # Custom
-You can provide [TaskIdGenerator](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TaskIdGenerator.java)、[TestObservableTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TestObservableTaskExecutor.java) and [TestPureTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TestPureTaskExecutor.java) with [PrefetchConfig](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PrefetchConfig.java) for special logic.
+You can provide [TaskIdGenerator](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TaskIdGenerator.java)、[ObservableTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/ObservableTaskExecutor.java) and [PureTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PureTaskExecutor.java) with [PrefetchConfig](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PrefetchConfig.java) for special logic.
 ```java
 public class App extends Application {
     @Override
