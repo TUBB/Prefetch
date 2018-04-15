@@ -1,7 +1,9 @@
 package com.tubb.prefetch;
 
+import android.os.Looper;
+
 /**
- * Check null utils
+ * Check utils
  * Created by tubingbing on 2017/12/18.
  */
 
@@ -16,5 +18,11 @@ final class CheckUtils {
 
     static <T> boolean isNull(T ref) {
         return ref == null;
+    }
+
+    static void checkOnMainThread() {
+        if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+            throw new RuntimeException("Please execute on main thread!");
+        }
     }
 }

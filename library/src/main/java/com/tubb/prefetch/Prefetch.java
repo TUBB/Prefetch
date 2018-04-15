@@ -6,6 +6,7 @@ import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import static com.tubb.prefetch.CheckUtils.checkNotNull;
+import static com.tubb.prefetch.CheckUtils.checkOnMainThread;
 import static com.tubb.prefetch.CheckUtils.isNull;
 
 /**
@@ -54,6 +55,7 @@ public final class Prefetch {
      */
     public synchronized <D> long executeTask(@NonNull final PureFetchTask<D> task) {
         checkNotNull(task, "task = null");
+        checkOnMainThread();
         if (mTaskMap.containsKey(task.getTaskId())) {
             throw new RuntimeException("A task can only execute once, you should finish the task first!");
         }
@@ -76,6 +78,7 @@ public final class Prefetch {
      */
     public synchronized <D> long executeTask(@NonNull final ObservableFetchTask<D> task) {
         checkNotNull(task, "task = null");
+        checkOnMainThread();
         if (mTaskMap.containsKey(task.getTaskId())) {
             throw new RuntimeException("A task can only execute once, you should finish the task first!");
         }
