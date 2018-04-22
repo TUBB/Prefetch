@@ -41,7 +41,7 @@ dependencies {
 
 publish {
     userOrg = 'tubb'
-    groupId = 'com.tubb'
+    groupId = 'io.github.tubb'
     artifactId = 'prefetch'
     publishVersion = project.versionName
     desc = 'Prefetch data universal library'

@@ -1,2 +1,2 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tubb.prefetch" />
+    package="io.github.tubb.prefetch" />

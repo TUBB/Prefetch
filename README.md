@@ -13,11 +13,11 @@ Prefetch data universal library for Activity.
 
 # Download
 ```groovy
-implementation 'com.tubb:prefetch:2.0.1'
+implementation 'io.github.tubb:prefetch:3.0.0'
 ```
 
 # Usage
-- Extends the [ObservableFetchTask](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/ObservableFetchTask.java) class, define the fetch task.
+- Extends the [ObservableFetchTask](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/io/github/tubb/prefetch/ObservableFetchTask.java) class, define the fetch task.
 ```java
 public class UserInfoObservableFetchTask extends ObservableFetchTask<UserInfo> {
     @Override
@@ -36,7 +36,7 @@ public class UserInfoObservableFetchTask extends ObservableFetchTask<UserInfo> {
     }
 }
 ```
-- If you want to return the pure data, please see [UserInfoPureFetchTask](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/UserInfoPureFetchTask.java).
+- If you want to return the pure data, please see [UserInfoPureFetchTask](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/io/github/tubb/prefetch/UserInfoPureFetchTask.java).
 - Execute the fetch task, prefetch the data and return the `taskId` you will need.
 ```java
 public class MainActivity extends AppCompatActivity {
@@ -111,7 +111,7 @@ public class UserInfoActivity extends AppCompatActivity implements FetchTask.Lis
 ```
 
 # Custom
-You can provide [TaskIdGenerator](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/TaskIdGenerator.java)、[ObservableTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/ObservableTaskExecutor.java) and [PureTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PureTaskExecutor.java) with [PrefetchConfig](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PrefetchConfig.java) for special logic.
+You can provide [TaskIdGenerator](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/io/github/tubb/prefetch/TaskIdGenerator.java)、[ObservableTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/ObservableTaskExecutor.java) and [PureTaskExecutor](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PureTaskExecutor.java) with [PrefetchConfig](https://github.com/TUBB/Prefetch/blob/master/library/src/main/java/com/tubb/prefetch/PrefetchConfig.java) for special logic.
 ```java
 public class App extends Application {
     @Override

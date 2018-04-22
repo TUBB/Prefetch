@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tubb.prefetch.test.MainActivity">
+    tools:context="io.github.tubb.prefetch.test.MainActivity">
 
     <TextView
         android:id="@+id/tv_user_name"
