@@ -1,5 +1,6 @@
 package io.github.tubb.prefetch;
 
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
@@ -53,6 +54,7 @@ public final class Prefetch {
      * @param <D> data generic
      * @return task id
      */
+    @MainThread
     public synchronized <D> long executeTask(@NonNull final PureFetchTask<D> task) {
         checkNotNull(task, "task = null");
         checkOnMainThread();
@@ -76,6 +78,7 @@ public final class Prefetch {
      * @param <D> data generic
      * @return task id
      */
+    @MainThread
     public synchronized <D> long executeTask(@NonNull final ObservableFetchTask<D> task) {
         checkNotNull(task, "task = null");
         checkOnMainThread();
@@ -129,9 +132,8 @@ public final class Prefetch {
         mListenerMap.remove(taskId);
     }
 
-    @SuppressWarnings("unchecked")
     private void notifyListener(final long taskId) {
-        ObservableFetchTask.Listener listener = mListenerMap.get(taskId);
+        FetchTask.Listener listener = mListenerMap.get(taskId);
         if (isNull(listener)) {
             Log.w(TAG, String.format("Not found %s task listener!", taskId));
             return;
@@ -147,6 +149,10 @@ public final class Prefetch {
                 listener.onExecuting();
                 break;
             case ObservableFetchTask.SUCCESS_STATE:
+                // Type-unsafe
+                // FetchTask<D> type is not equals FetchTask.Listener<D> type
+                // Maybe throws ClassCastException
+                // Please noticed that!!!
                 listener.onSuccess(task.getData());
                 break;
             case ObservableFetchTask.ERROR_STATE:
