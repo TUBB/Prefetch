@@ -42,6 +42,7 @@ public final class Prefetch {
     /**
      * Init Prefetch with custom config
      * @param config custom PrefetchConfig
+     * @throws NullPointerException if config is null
      */
     public void init(@NonNull PrefetchConfig config) {
         checkNotNull(config, "config = null");
@@ -53,6 +54,9 @@ public final class Prefetch {
      * @param task your custom task
      * @param <D> data generic
      * @return task id
+     * @throws NullPointerException if task is null
+     * @throws RuntimeException if not execute on main thread
+     * @throws RuntimeException if task execute twice
      */
     @MainThread
     public synchronized <D> long executeTask(@NonNull final PureFetchTask<D> task) {
@@ -77,6 +81,10 @@ public final class Prefetch {
      * @param task your custom task
      * @param <D> data generic
      * @return task id
+     * @throws NullPointerException if task is null
+     * @throws RuntimeException if not execute on main thread
+     * @throws RuntimeException if task execute twice
+     *
      */
     @MainThread
     public synchronized <D> long executeTask(@NonNull final ObservableFetchTask<D> task) {
@@ -99,6 +107,7 @@ public final class Prefetch {
     /**
      * Finished the task, then you can execute the same task again
      * @param taskId task id
+     * @throws RuntimeException if not execute the task yet
      */
     public synchronized void finishTask(final long taskId) {
         if (!mTaskMap.containsKey(taskId)) {
@@ -114,6 +123,8 @@ public final class Prefetch {
      * Register listener to listen the task's result
      * @param taskId task id
      * @param listener ObservableFetchTask.Listener
+     * @throws NullPointerException if listener is null
+     * @throws RuntimeException if not execute the task yet
      */
     public synchronized void registerListener(final long taskId, @NonNull final FetchTask.Listener listener) {
         checkNotNull(listener, "listener = null");
@@ -150,7 +161,7 @@ public final class Prefetch {
                 break;
             case ObservableFetchTask.SUCCESS_STATE:
                 // Type-unsafe
-                // FetchTask<D> type is not equals FetchTask.Listener<D> type
+                // When FetchTask<D> type is not equals FetchTask.Listener<D> type
                 // Maybe throws ClassCastException
                 // Please noticed that!!!
                 listener.onSuccess(task.getData());
