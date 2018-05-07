@@ -5,5 +5,14 @@ package io.github.tubb.prefetch.test;
  */
 
 public class UserInfo {
+    public String userId;
     public String name;
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "userId='" + userId + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

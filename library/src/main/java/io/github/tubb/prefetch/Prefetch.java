@@ -59,7 +59,7 @@ public final class Prefetch {
      * @throws RuntimeException if task execute twice
      */
     @MainThread
-    public synchronized <D> long executeTask(@NonNull final PureFetchTask<D> task) {
+    public <D> long executeTask(@NonNull final PureFetchTask<D> task) {
         checkNotNull(task, "task = null");
         checkOnMainThread();
         if (mTaskMap.containsKey(task.getTaskId())) {
@@ -87,7 +87,7 @@ public final class Prefetch {
      *
      */
     @MainThread
-    public synchronized <D> long executeTask(@NonNull final ObservableFetchTask<D> task) {
+    public <D> long executeTask(@NonNull final ObservableFetchTask<D> task) {
         checkNotNull(task, "task = null");
         checkOnMainThread();
         if (mTaskMap.containsKey(task.getTaskId())) {
@@ -109,14 +109,16 @@ public final class Prefetch {
      * @param taskId task id
      * @throws RuntimeException if not execute the task yet
      */
-    public synchronized void finishTask(final long taskId) {
+    public void finishTask(final long taskId) {
         if (!mTaskMap.containsKey(taskId)) {
             throw new RuntimeException(String.format("Not find the target task of %s", taskId));
         }
-        FetchTask task = mTaskMap.remove(taskId);
-        if (!isNull(task)) // the task maybe null
-            task.reset();
-        mListenerMap.remove(taskId);
+        synchronized (this) {
+            FetchTask task = mTaskMap.remove(taskId);
+            if (!isNull(task)) // the task maybe null
+                task.reset();
+            mListenerMap.remove(taskId);
+        }
     }
 
     /**
@@ -126,12 +128,14 @@ public final class Prefetch {
      * @throws NullPointerException if listener is null
      * @throws RuntimeException if not execute the task yet
      */
-    public synchronized void registerListener(final long taskId, @NonNull final FetchTask.Listener listener) {
+    public void registerListener(final long taskId, @NonNull final FetchTask.Listener listener) {
         checkNotNull(listener, "listener = null");
         if (!mTaskMap.containsKey(taskId)) {
             throw new RuntimeException(String.format("The %s task not execute yet!", taskId));
         }
-        mListenerMap.put(taskId, listener);
+        synchronized (this) {
+            mListenerMap.put(taskId, listener);
+        }
         notifyListener(taskId);
     }
 
@@ -139,10 +143,13 @@ public final class Prefetch {
      * Unregister listener of task's result
      * @param taskId task id
      */
-    public synchronized void unregisterListener(final long taskId) {
-        mListenerMap.remove(taskId);
+    public void unregisterListener(final long taskId) {
+        synchronized (this) {
+            mListenerMap.remove(taskId);
+        }
     }
 
+    @SuppressWarnings("unchecked")
     private void notifyListener(final long taskId) {
         FetchTask.Listener listener = mListenerMap.get(taskId);
         if (isNull(listener)) {
@@ -164,7 +171,11 @@ public final class Prefetch {
                 // When FetchTask<D> type is not equals FetchTask.Listener<D> type
                 // Maybe throws ClassCastException
                 // Please noticed that!!!
-                listener.onSuccess(task.getData());
+                try {
+                    listener.onSuccess(task.getData());
+                } catch (ClassCastException e) {
+                    listener.onError(e);
+                }
                 break;
             case ObservableFetchTask.ERROR_STATE:
                 listener.onError(task.getException());
@@ -175,18 +186,18 @@ public final class Prefetch {
         }
     }
 
-    synchronized <D, E> void taskExecuting(final FetchTask<D, E> task) {
+    <D, E> void taskExecuting(final FetchTask<D, E> task) {
         task.setState(FetchTask.EXECUTING_STATE);
         notifyListener(task.getTaskId());
     }
 
-    synchronized <D, E> void taskExecuteException(final FetchTask<D, E> task, Throwable exception) {
+    <D, E> void taskExecuteException(final FetchTask<D, E> task, Throwable exception) {
         task.setState(FetchTask.ERROR_STATE);
         task.setException(exception);
         notifyListener(task.getTaskId());
     }
 
-    synchronized <D, E> void taskExecuteSuccess(final FetchTask<D, E> task, @Nullable final D data) {
+    <D, E> void taskExecuteSuccess(final FetchTask<D, E> task, @Nullable final D data) {
         task.setState(FetchTask.SUCCESS_STATE);
         task.setData(data);
         notifyListener(task.getTaskId());

@@ -45,7 +45,7 @@ public class UserInfoActivity extends AppCompatActivity implements ObservableFet
 
     @Override
     public void onSuccess(UserInfo userInfo) {
-        tv_user_name.setText(String.format("loaded data -> %s", userInfo.name));
+        tv_user_name.setText(String.format("loaded data: \n%s", userInfo.toString()));
         Prefetch.instance().finishTask(taskId);
     }
 

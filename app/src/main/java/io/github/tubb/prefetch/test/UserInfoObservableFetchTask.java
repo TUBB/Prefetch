@@ -22,6 +22,7 @@ public class UserInfoObservableFetchTask extends ObservableFetchTask<UserInfo> {
                 // just for test
                 Thread.sleep(5000);
                 UserInfo userInfo = new UserInfo();
+                userInfo.userId = String.valueOf(System.currentTimeMillis());
                 userInfo.name = "BingBing";
                 emitter.onNext(userInfo);
             }
