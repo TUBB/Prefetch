@@ -1,5 +1,5 @@
 # Prefetch
-![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v3.0.1-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+![](https://img.shields.io/badge/minSdkVersion-14-brightgreen.svg) ![](https://img.shields.io/badge/release-v3.0.2-brightgreen.svg) [![](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 - [中文文档](http://tubb.github.io/2018/03/20/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%8F%96%E5%B0%8F%E8%BD%AE%E5%AD%90/)
 
@@ -13,7 +13,7 @@ Prefetch data universal library for Activity.
 
 # Download
 ```groovy
-implementation 'io.github.tubb:prefetch:3.0.1'
+implementation 'io.github.tubb:prefetch:3.0.2'
 ```
 
 # Usage
