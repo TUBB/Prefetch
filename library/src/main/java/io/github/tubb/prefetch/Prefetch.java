@@ -15,6 +15,7 @@ import static io.github.tubb.prefetch.CheckUtils.isNull;
  * Created by tubingbing on 18/3/11.
  */
 
+@SuppressWarnings("ALL")
 public final class Prefetch {
     private static final String TAG = "Prefetch";
     private static final Prefetch INSTANCE = new Prefetch();
