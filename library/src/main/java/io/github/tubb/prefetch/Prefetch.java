@@ -192,7 +192,7 @@ public final class Prefetch {
         notifyListener(task.getTaskId());
     }
 
-    <D, E> void taskExecuteException(final FetchTask<D, E> task, Throwable exception) {
+    <D, E> void taskExecuteError(final FetchTask<D, E> task, Throwable exception) {
         task.setState(FetchTask.ERROR_STATE);
         task.setException(exception);
         notifyListener(task.getTaskId());

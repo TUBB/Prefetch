@@ -51,6 +51,6 @@ public abstract class ObservableTaskExecutor {
      */
     protected <D> void onExecuteError(@NonNull final FetchTask<D, Observable<D>> task, @Nullable Throwable throwable) {
         checkNotNull(task, "task = null");
-        Prefetch.instance().taskExecuteException(task, throwable);
+        Prefetch.instance().taskExecuteError(task, throwable);
     }
 }

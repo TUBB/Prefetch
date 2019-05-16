@@ -1,5 +1,7 @@
 package io.github.tubb.prefetch;
 
+import android.annotation.SuppressLint;
+
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 
@@ -10,6 +12,7 @@ import io.reactivex.functions.Consumer;
 
 final class DefaultObservableTaskExecutor extends ObservableTaskExecutor {
 
+    @SuppressLint("CheckResult")
     @Override
     public <D> void execute(final FetchTask<D, Observable<D>> task) {
         if (!(task instanceof ObservableFetchTask)) {
