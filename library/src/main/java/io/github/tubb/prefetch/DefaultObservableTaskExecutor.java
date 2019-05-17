@@ -3,6 +3,7 @@ package io.github.tubb.prefetch;
 import android.annotation.SuppressLint;
 
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -12,7 +13,6 @@ import io.reactivex.functions.Consumer;
 
 final class DefaultObservableTaskExecutor extends ObservableTaskExecutor {
 
-    @SuppressLint("CheckResult")
     @Override
     public <D> void execute(final FetchTask<D, Observable<D>> task) {
         if (!(task instanceof ObservableFetchTask)) {
@@ -20,7 +20,7 @@ final class DefaultObservableTaskExecutor extends ObservableTaskExecutor {
         }
         ObservableFetchTask<D> observableFetchTask = (ObservableFetchTask<D>)task;
         onExecuting(task);
-        task.execute()
+        Disposable disposable = task.execute()
                 .subscribeOn(observableFetchTask.subscribeOnScheduler())
                 .observeOn(observableFetchTask.observeOnScheduler())
                 .subscribe(new Consumer<D>() {
@@ -34,5 +34,6 @@ final class DefaultObservableTaskExecutor extends ObservableTaskExecutor {
                         onExecuteError(task, throwable);
                     }
                 });
+        observableFetchTask.setDisposable(disposable);
     }
 }

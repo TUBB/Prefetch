@@ -8,7 +8,6 @@ import android.view.View;
 import io.github.tubb.prefetch.Prefetch;
 
 public class MainActivity extends AppCompatActivity {
-    private long taskId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,17 +15,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // prefetch user info data
-        // taskId = Prefetch.instance().executeTask(new UserInfoObservableFetchTask());
-        taskId = Prefetch.instance().executeTask(new UserInfoPureFetchTask());
-    }
-
     public void viewClick(View view) {
         Intent intent = new Intent(this, UserInfoActivity.class);
-        intent.putExtra("taskId", taskId);
-        startActivity(intent);
+        int viewId = view.getId();
+        switch (viewId) {
+            case R.id.btnPureTask:
+                long pureTaskId = Prefetch.instance().executeTask(new UserInfoPureFetchTask());
+                intent.putExtra("taskId", pureTaskId);
+                startActivity(intent);
+                break;
+            case R.id.btnObservableTask:
+                long observableTaskId = Prefetch.instance().executeTask(new UserInfoObservableFetchTask());
+                intent.putExtra("taskId", observableTaskId);
+                startActivity(intent);
+                break;
+        }
     }
 }

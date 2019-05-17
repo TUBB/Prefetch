@@ -13,7 +13,7 @@ Prefetch data universal library for Activity.
 
 # Download
 ```groovy
-implementation 'io.github.tubb:prefetch:3.0.3'
+implementation 'io.github.tubb:prefetch:3.1.0'
 ```
 
 # Usage

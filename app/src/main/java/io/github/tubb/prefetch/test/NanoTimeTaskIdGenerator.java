@@ -10,9 +10,9 @@ import java.util.UUID;
  * Created by tubingbing on 18/3/23.
  */
 
-public class UUIDTaskIdGenerator implements TaskIdGenerator {
+public class NanoTimeTaskIdGenerator implements TaskIdGenerator {
     @Override
     public <D, E> long generateTaskId(FetchTask<D, E> task) {
-        return UUID.randomUUID().toString().hashCode();
+        return System.nanoTime();
     }
 }

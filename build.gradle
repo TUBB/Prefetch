@@ -28,8 +28,8 @@ allprojects {
         supportVersion = '28.0.0'
         rxjavaVersion = '2.2.8'
         rxandroidVersion = '2.1.1'
-        versionCode = 303
-        versionName = '3.0.3'
+        versionCode = 310
+        versionName = '3.1.0'
     }
 }
 

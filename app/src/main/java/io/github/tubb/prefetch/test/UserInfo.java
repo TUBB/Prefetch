@@ -10,7 +10,7 @@ public class UserInfo {
 
     @Override
     public String toString() {
-        return "UserInfo{" +
+        return "{" +
                 "userId='" + userId + '\'' +
                 ", name='" + name + '\'' +
                 '}';

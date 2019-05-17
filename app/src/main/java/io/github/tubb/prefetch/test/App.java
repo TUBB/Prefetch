@@ -15,10 +15,11 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         // init Prefetch
-        Prefetch.instance().init(new PrefetchConfig.Builder()
-                .taskIdGenerator(new UUIDTaskIdGenerator())
-                .observableTaskExecutor(new TestObservableTaskExecutor())
-                .pureTaskExecutor(new TestPureTaskExecutor())
-                .build());
+        PrefetchConfig config = new PrefetchConfig.Builder()
+//                .taskIdGenerator(new NanoTimeTaskIdGenerator())
+//                .observableTaskExecutor(new TestObservableTaskExecutor())
+//                .pureTaskExecutor(new TestPureTaskExecutor())
+                .build();
+        Prefetch.instance().init(config);
     }
 }

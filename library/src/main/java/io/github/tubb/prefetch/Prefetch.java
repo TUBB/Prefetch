@@ -108,16 +108,20 @@ public final class Prefetch {
     /**
      * Finished the task, then you can execute the same task again
      * @param taskId task id
-     * @throws RuntimeException if not execute the task yet
      */
     public void finishTask(final long taskId) {
         if (!mTaskMap.containsKey(taskId)) {
-            throw new RuntimeException(String.format("Not find the target task of %s", taskId));
+            Log.w(TAG, String.format("Not find the target task of %s", taskId));
+            return;
         }
         synchronized (this) {
             FetchTask task = mTaskMap.remove(taskId);
-            if (!isNull(task)) // the task maybe null
+            if (!isNull(task)) { // the task maybe null
+                if (task instanceof ObservableFetchTask) {
+                    ((ObservableFetchTask) task).dispose();
+                }
                 task.reset();
+            }
             mListenerMap.remove(taskId);
         }
     }

@@ -19,8 +19,8 @@ public class UserInfoPureFetchTask extends PureFetchTask<UserInfo> {
             e.printStackTrace();
         }
         UserInfo userInfo = new UserInfo();
-        userInfo.userId = String.valueOf(System.currentTimeMillis());
-        userInfo.name = "BingBing";
+        userInfo.userId = String.valueOf(System.nanoTime());
+        userInfo.name = "Pure task";
         return userInfo;
     }
 }

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Prefetch</string>
-    <string name="home_label">HomePage</string>
+    <string name="home_label">Prefetch</string>
     <string name="user_info_label">UserInfoPage</string>
+    <string name="user_info_page_pure_task">user info page(pure task)</string>
+    <string name="user_info_page_observable_task">user info page(observable task)</string>
 </resources>
